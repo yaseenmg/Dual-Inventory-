@@ -51,3 +51,16 @@ jobs:
       - name: Build Forge mod
         working-directory: dualinv
         run: ./gradlew build --no-daemon
+      - name: Package source archive
+        run: |
+          zip -r dualinventory-source.zip dualinv \
+            -x "dualinv/.gradle/*" "dualinv/build/*" "dualinv/.git/*"
+      - name: Upload mod JAR and source archive
+        uses: actions/upload-artifact@v4
+        with:
+          name: Dual-Inventory-Forge-1.20.1
+          path: |
+            dualinv/build/libs/*.jar
+            dualinventory-source.zip
+          if-no-files-found: error
+          retention-days: 90
