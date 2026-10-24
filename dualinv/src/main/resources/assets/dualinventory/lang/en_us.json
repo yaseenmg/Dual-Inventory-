@@ -1,0 +1,5 @@
+{
+  "key.categories.dualinventory": "Dual Inventory",
+  "key.dualinventory.swap": "Swap Inventory (A/B)",
+  "dualinventory.switched": "Inventory %s Activated"
+}
