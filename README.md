@@ -98,3 +98,8 @@ When reporting a bug, include:
 - Other inventory/equipment mods installed
 - The complete relevant log or crash report
 - Steps to reproduce the issue
+
+
+## Source tree status
+
+The Java sources, Forge metadata, Gradle build files, language resources, and project notes are in the `dualinv/` directory. The Gradle wrapper JAR (`dualinv/gradle/wrapper/gradle-wrapper.jar`) is not yet present in this GitHub copy, so the checked-in `gradlew` launcher is not available here; use an installed Gradle command or add the wrapper JAR from the original source archive before using the wrapper.
