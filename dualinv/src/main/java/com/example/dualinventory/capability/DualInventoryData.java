@@ -17,16 +17,16 @@ public class DualInventoryData implements INBTSerializable<CompoundTag> {
     @Override
     public CompoundTag serializeNBT() {
         CompoundTag tag = new CompoundTag();
-        tag.m_128359_("Active", active.name());
-        tag.m_128365_("SlotA", slotA.save());
-        tag.m_128365_("SlotB", slotB.save());
+        tag.getAllKeys("Active", active.name());
+        tag.put("SlotA", slotA.save());
+        tag.put("SlotB", slotB.save());
         return tag;
     }
     @Override
     public void deserializeNBT(CompoundTag tag) {
-        active = tag.m_128441_("Active") && tag.m_128461_("Active").equals("B") ? Slot.B : Slot.A;
-        if (tag.m_128441_("SlotA")) slotA.load(tag.m_128469_("SlotA"));
-        if (tag.m_128441_("SlotB")) slotB.load(tag.m_128469_("SlotB"));
+        active = tag.contains("Active") && tag.getBoolean("Active").equals("B") ? Slot.B : Slot.A;
+        if (tag.contains("SlotA")) slotA.load(tag.getCompound("SlotA"));
+        if (tag.contains("SlotB")) slotB.load(tag.getCompound("SlotB"));
     }
     public void copyFrom(DualInventoryData other) { deserializeNBT(other.serializeNBT()); }
 }
