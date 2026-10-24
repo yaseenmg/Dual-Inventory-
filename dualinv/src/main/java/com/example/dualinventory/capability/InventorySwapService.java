@@ -17,8 +17,8 @@ public final class InventorySwapService {
         DualInventoryData data = CapabilityHandler.get(player);
         DualInventoryData.Slot leaving = data.getActive();
         DualInventoryData.Slot entering = data.other();
-        data.get(leaving).captureFrom(player.m_150109_());
-        data.get(entering).applyTo(player.m_150109_());
+        data.get(leaving).captureFrom(player.getInventory());
+        data.get(entering).applyTo(player.getInventory());
 
         if (ModList.get().isLoaded("travelersbackpack")) {
             data.get(leaving).travelersBackpack = TravelersBackpackCompat.capture(player);
@@ -30,26 +30,26 @@ public final class InventorySwapService {
         }
 
         data.setActive(entering);
-        player.m_150109_().m_6596_();
-        player.f_36096_.m_150429_();
+        player.getInventory().setChanged();
+        player.containerMenu.sendAllDataToRemote();
         playEquipSounds(player);
         sendSwitchMessage(player, entering);
     }
 
     private static void playEquipSounds(ServerPlayer player) {
         for (EquipmentSlot slot : EquipmentSlot.values()) {
-            if (slot.m_20743_() != EquipmentSlot.Type.ARMOR) continue;
-            ItemStack stack = player.m_6844_(slot);
-            if (stack.m_41619_()) continue;
-            if (stack.m_41720_() instanceof ArmorItem armorItem) {
-                player.m_9236_().m_6263_(null, player.m_20185_(), player.m_20186_(), player.m_20189_(),
-                        armorItem.m_40401_().m_7344_(), SoundSource.PLAYERS, 1.0F, 1.0F);
+            if (slot.getType() != EquipmentSlot.Type.ARMOR) continue;
+            ItemStack stack = player.getItemBySlot(slot);
+            if (stack.isEmpty()) continue;
+            if (stack.getItem() instanceof ArmorItem armorItem) {
+                player.level().playSound(null, player.getX(), player.getY(), player.getZ(),
+                        armorItem.getMaterial().getEquipSound(), SoundSource.PLAYERS, 1.0F, 1.0F);
             }
         }
     }
 
     private static void sendSwitchMessage(ServerPlayer player, DualInventoryData.Slot active) {
         String label = active == DualInventoryData.Slot.A ? "A" : "B";
-        player.m_5661_(Component.m_237110_("dualinventory.switched", label), true);
+        player.displayClientMessage(Component.translatable("dualinventory.switched", label), true);
     }
 }
