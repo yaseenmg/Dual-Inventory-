@@ -13,13 +13,13 @@ public final class TravelersBackpackCompat {
         return CapabilityUtils.getCapability(player)
                 .resolve()
                 .map(ITravelersBackpack::getBackpack)
-                .orElse(ItemStack.f_41583_)
-                .m_41777_();
+                .orElse(ItemStack.EMPTY)
+                .copy();
     }
 
     public static void apply(Player player, ItemStack backpack) {
         CapabilityUtils.getCapability(player)
                 .resolve()
-                .ifPresent(cap -> cap.equipBackpack(backpack.m_41777_()));
+                .ifPresent(cap -> cap.equipBackpack(backpack.copy()));
     }
 }
