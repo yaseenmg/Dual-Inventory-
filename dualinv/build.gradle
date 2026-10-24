@@ -30,8 +30,17 @@ minecraft {
     }
 }
 sourceSets.main.resources { srcDir 'src/generated/resources' }
+repositories {
+    maven { url = "https://maven.theillusivec4.top/" }
+    maven { url = "https://www.cursemaven.com/" }
+}
+
 dependencies {
     minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+
+    // Optional integrations are compile-time only: the mod remains usable without either mod installed.
+    compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:5.14.1+1.20.1:api")
+    compileOnly fg.deobf("curse.maven:travelers-backpack-321117:8040188")
 }
 tasks.named('processResources', ProcessResources).configure {
     var replaceProperties = [
