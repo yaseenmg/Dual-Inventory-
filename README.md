@@ -102,4 +102,4 @@ When reporting a bug, include:
 
 ## Source tree status
 
-The Java sources, Forge metadata, Gradle build files, language resources, and project notes are in the `dualinv/` directory. The Gradle wrapper JAR (`dualinv/gradle/wrapper/gradle-wrapper.jar`) is not yet present in this GitHub copy, so the checked-in `gradlew` launcher is not available here; use an installed Gradle command or add the wrapper JAR from the original source archive before using the wrapper.
+The Java sources, Forge metadata, Gradle build files, language resources, and project notes are in the `dualinv/` directory. The `gradlew` and `gradlew.bat` launchers are checked in, but `dualinv/gradle/wrapper/gradle-wrapper.jar` is still missing. See [`dualinv/SETUP_WRAPPER.md`](dualinv/SETUP_WRAPPER.md) for instructions to regenerate it locally. A GitHub Actions workflow also attempts a build using an installed Gradle 8.8; check the Actions tab for its result.
