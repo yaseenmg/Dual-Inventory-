@@ -11,14 +11,14 @@ public class ClientForgeEvents {
     @SubscribeEvent
     public static void onInventoryScreenRender(ScreenEvent.Render.Post event) {
         if (!(event.getScreen() instanceof InventoryScreen screen)) return;
-        var player = Minecraft.m_91087_().f_91074_;
+        var player = Minecraft.getInstance().player;
         if (player == null) return;
         DualInventoryData.Slot active = CapabilityHandler.getOptional(player)
                 .map(DualInventoryData::getActive).orElse(DualInventoryData.Slot.A);
         String label = "[" + (active == DualInventoryData.Slot.A ? "A" : "B") + "]";
         int x = readIntField(screen, "f_97735_") + 90;
         int y = readIntField(screen, "f_97736_") + 6;
-        event.getGuiGraphics().m_280056_(Minecraft.m_91087_().f_91062_, label, x, y, 0x55FF55, false);
+        event.getGuiGraphics().drawString(Minecraft.getInstance().font, label, x, y, 0x55FF55, false);
     }
     private static int readIntField(Object obj, String fieldName) {
         Class<?> cls = obj.getClass();
