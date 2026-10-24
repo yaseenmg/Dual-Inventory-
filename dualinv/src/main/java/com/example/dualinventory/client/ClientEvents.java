@@ -10,8 +10,8 @@ public class ClientEvents {
     @SubscribeEvent
     public static void onClientTick(TickEvent.ClientTickEvent event) {
         if (event.phase != TickEvent.Phase.END) return;
-        if (Minecraft.m_91087_().f_91074_ == null) return;
-        while (KeyBindings.SWAP_INVENTORY.m_90859_()) {
+        if (Minecraft.getInstance().player == null) return;
+        while (KeyBindings.SWAP_INVENTORY.consumeClick()) {
             NetworkHandler.CHANNEL.sendToServer(new SwapInventoryPacket());
         }
     }
