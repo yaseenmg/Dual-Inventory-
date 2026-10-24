@@ -16,7 +16,7 @@ public final class CuriosCompat {
         List<ItemStack> result = new ArrayList<>();
         CuriosApi.getCuriosInventory(player).resolve().ifPresent(handler -> {
             IItemHandlerModifiable equipped = handler.getEquippedCurios();
-            for (int i = 0; i < equipped.getSlots(); i++) result.add(equipped.getStackInSlot(i).m_41777_());
+            for (int i = 0; i < equipped.getSlots(); i++) result.add(equipped.getStackInSlot(i).copy());
         });
         return result;
     }
@@ -27,7 +27,7 @@ public final class CuriosCompat {
             int slots = equipped.getSlots();
             for (int i = 0; i < slots; i++) {
                 ItemStack toSet = (stacks != null && i < stacks.size())
-                        ? stacks.get(i).m_41777_() : ItemStack.f_41583_;
+                        ? stacks.get(i).copy() : ItemStack.EMPTY;
                 equipped.setStackInSlot(i, toSet);
             }
         });
