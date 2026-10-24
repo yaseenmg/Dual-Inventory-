@@ -1,0 +1,39 @@
+modLoader = "javafml"
+loaderVersion = "[46,)"
+license = "MIT"
+
+[[mods]]
+  modId = "dualinventory"
+  version = "1.0.0"
+  displayName = "Dual Inventory"
+  displayTest = "IGNORE_ALL_VERSION"
+  description = "Adds two independently-saved player inventories (A/B) that can be instantly swapped with a keybind."
+  authors = "You"
+
+[[dependencies.dualinventory]]
+  modId = "minecraft"
+  mandatory = true
+  versionRange = "[1.20.1,1.21)"
+  ordering = "NONE"
+  side = "BOTH"
+
+[[dependencies.dualinventory]]
+  modId = "forge"
+  mandatory = true
+  versionRange = "[46,)"
+  ordering = "NONE"
+  side = "BOTH"
+
+[[dependencies.dualinventory]]
+  modId = "travelersbackpack"
+  mandatory = false
+  versionRange = "[9.0.0,)"
+  ordering = "AFTER"
+  side = "BOTH"
+
+[[dependencies.dualinventory]]
+  modId = "curios"
+  mandatory = false
+  versionRange = "[5.0.0,)"
+  ordering = "AFTER"
+  side = "BOTH"
