@@ -16,8 +16,8 @@ public class ClientForgeEvents {
         DualInventoryData.Slot active = CapabilityHandler.getOptional(player)
                 .map(DualInventoryData::getActive).orElse(DualInventoryData.Slot.A);
         String label = "[" + (active == DualInventoryData.Slot.A ? "A" : "B") + "]";
-        int x = readIntField(screen, "f_97735_") + 90;
-        int y = readIntField(screen, "f_97736_") + 6;
+        int x = readIntField(screen, "leftPos") + 90;
+        int y = readIntField(screen, "topPos") + 6;
         event.getGuiGraphics().drawString(Minecraft.getInstance().font, label, x, y, 0x55FF55, false);
     }
     private static int readIntField(Object obj, String fieldName) {
