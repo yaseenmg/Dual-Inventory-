@@ -12,14 +12,25 @@ import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
+/**
+ * DualInventory - gives each player two independently-saved inventories (A and B) that
+ * can be instantly swapped with a keybind (default: Z). Swapping covers the main 36 slots,
+ * armor, and offhand, and persists across logout/world exit via a Forge capability attached
+ * to the player entity.
+ */
 @Mod(DualInventoryMod.MOD_ID)
 public class DualInventoryMod {
+
     public static final String MOD_ID = "dualinventory";
+
     public DualInventoryMod() {
         IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
+
         CapabilityHandler.register(modBus);
         NetworkHandler.register();
+
         MinecraftForge.EVENT_BUS.register(PlayerEvents.class);
+
         DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> {
             modBus.register(ClientSetup.class);
             modBus.register(KeyBindings.class);

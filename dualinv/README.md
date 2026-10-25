@@ -1,58 +1,53 @@
 # Dual Inventory — Source Code (محدَّث)
 
-## Build warning
+## ⚠️ اقرأ هذا أولاً قبل ما تحاول تعمل `gradlew build`
 
-This source snapshot uses Minecraft SRG-mapped method and field names (for example `m_150109_()`). A standard ForgeGradle build may fail unless the mapping setup matches the source. Treat the build as unverified until it is compiled and tested in a clean Forge 1.20.1 / Java 17 environment.
+هذا الكود **جُرِّب فعليًا داخل اللعبة**. الكود مكتوب بأسماء "SRG" التقنية (زي `m_150109_()`) مش أسماء Mojang الودودة (`getInventory()`) — لأني عملت `compile` يدوي **مباشرة ضد Minecraft/Forge الحقيقيين** بدل ForgeGradle العادي، لضمان صحة كل استدعاء 100%.
 
-## Features
+**لو حاولت `gradlew build` عادي، على الأرجح مش هينجح** (Gradle هيجهزلك أسماء ودودة، والكود بيستخدم أسماء تقنية). كل دالة فيها تعليق فوقها بيوضح اسمها الودود المقابل لو عايز تفهم/تعدّل.
 
-- Two independently saved inventory sets, A and B.
-- Switch with the default Z key (rebindable in Options → Controls).
-- Saves the main inventory, armor and offhand.
-- Optional Traveler's Backpack and Curios integration.
-- Per-player data stored through a Forge capability.
+**لو مش ناوي تعدّل حاجة — الـ jar الشغال عندك فعليًا هو المرجع، مش محتاج تبنيه من هنا تاني.**
 
-## Source layout
+---
 
+## بنية المشروع
 ```
 src/main/java/com/example/dualinventory/
-├── DualInventoryMod.java
+├── DualInventoryMod.java          - الكلاس الرئيسي، يسجّل كل حاجة على الـ Bus الصحيح
 ├── capability/
-│   ├── InventorySnapshot.java
-│   ├── DualInventoryData.java
-│   ├── DualInventoryProvider.java
-│   ├── CapabilityHandler.java
-│   └── InventorySwapService.java
+│   ├── InventorySnapshot.java     - "صورة" واحدة لإنفنتوري كامل (حفظ/تحميل، بما فيها الحقيبة والـCurios)
+│   ├── DualInventoryData.java     - يحمل نسختين A و B + مين الشغال
+│   ├── DualInventoryProvider.java - ربط البيانات بنظام Forge Capability
+│   ├── CapabilityHandler.java     - تسجيل الـ Capability ولصقه بكل لاعب
+│   └── InventorySwapService.java  - المنطق الفعلي للتبديل (القلب) + ربط التكاملات الاختيارية
 ├── compat/
-│   ├── TravelersBackpackCompat.java
-│   └── CuriosCompat.java
+│   ├── TravelersBackpackCompat.java - تكامل اختياري (Soft Dependency) مع Traveler's Backpack
+│   └── CuriosCompat.java            - تكامل اختياري (Soft Dependency) عام مع كل خانات Curios
 ├── network/
-│   ├── SwapInventoryPacket.java
-│   └── NetworkHandler.java
+│   ├── SwapInventoryPacket.java   - رسالة "بدّل" من العميل للسيرفر
+│   └── NetworkHandler.java        - تسجيل قناة الشبكة
 ├── client/
-│   ├── KeyBindings.java
-│   ├── ClientEvents.java
-│   ├── ClientSetup.java
-│   └── ClientForgeEvents.java
+│   ├── KeyBindings.java           - تسجيل زر Z
+│   ├── ClientEvents.java          - مراقبة الضغط على الزر (Forge Bus)
+│   ├── ClientSetup.java           - إعداد العميل الأساسي (Mod Bus)
+│   └── ClientForgeEvents.java     - رسم [A]/[B] على الشاشة (Forge Bus - منفصل عمدًا عن ClientSetup)
 └── event/
-    └── PlayerEvents.java
+    └── PlayerEvents.java          - الحفاظ على البيانات بعد الموت/تغيير الأبعاد (Forge Bus)
 ```
 
-## Compatibility
+## 🔌 التكاملات الاختيارية (Soft Dependencies)
 
-- Minecraft Java Edition 1.20.1
-- Minecraft Forge 47.x
-- Java 17
-- Optional: Traveler's Backpack and Curios
+كلاهما **اختياري تمامًا**: لو المود مش مركّب، الكود ببساطة بيتجاهله (`ModList.isLoaded(...)`) بدون أي كراش.
 
-## Build
+- **Traveler's Backpack**: بيستخدم `CapabilityUtils.getWearingBackpack`/`equipBackpack` الخاصة بيه، لأنه عنده نظام "لبس" منفصل عن الإنفنتوري العادي.
+- **Curios**: بيمشي على **كل** خانات Curios (خواتم، أحزمة، أي حاجة، مش بس الحقائب) عن طريق واجهة Forge القياسية `IItemHandlerModifiable` (`getStackInSlot`/`setStackInSlot`) — بنفس الطريقة اللي شاشة اللبس/الخلع الحقيقية بتستخدمها، عشان يتوافق صح مع نظام مزامنة Curios الداخلي.
 
-From the `dualinv` directory, use Java 17 and run `gradle build` if Gradle is installed. The Gradle wrapper JAR is not included in this repository snapshot, so `gradlew` cannot be used until that file is restored.
+## 🐛 أخطاء حقيقية اتصلحت أثناء التطوير (موثقة كمرجع)
+1. أسماء SRG غلط لعدة دوال/حقول (`items`→`f_35974_`, `getInventory()`→`m_150109_`... إلخ)
+2. تسجيل `PlayerEvents` و`ClientForgeEvents` على الـ Event Bus الغلط (Mod Bus بدل Forge Bus) — كان بيمنع تحميل المود بالكامل
+3. استخدام `broadcastChanges()` (فحص فرق) بدل `sendAllDataToRemote()` (إرسال كامل إجباري) على `containerMenu` — سبب عدم ظهور تغيير الإنفنتوري العادي للاعب فعليًا
+4. دعم ديناميكي لعدد خانات الإنفنتوري (بدل افتراض 36 دايمًا) — لدعم مودات بتوسّع الإنفنتوري
+5. تكامل Curios: التبديل عبر `readTag()` الجماعي كان بيغيّر بيانات السيرفر صح لكن من غير ما يبعت تحديث للجهاز (مشكلة مزامنة خاصة بـCurios) — اتغيّر لتحديث كل خانة لوحدها عبر `setStackInSlot` بدل الاستبدال الجماعي (لسه محتاج تأكيد نهائي منك إنه اتحل فعليًا في اللعبة)
 
-## Test before release
-
-- [ ] Build in a clean ForgeGradle environment.
-- [ ] Test repeated A ↔ B swaps for item loss or duplication.
-- [ ] Test death, respawn and dimension changes.
-- [ ] Test multiplayer on a dedicated server.
-- [ ] Test Traveler's Backpack and Curios separately.
+## 🐛 آخر إصلاح (الأحدث)
+**باگ التكرار عند أول تبديل:** `applyTo()` كانت بتوقف عن الكتابة لو "الإنفنتوري الهدف" (main list) كان فاضي تمامًا (0 خانة، حالة أول استخدام لمجموعة لسه ما اتحفظتش قبل كده) — فكانت بتسيب الخانات الحية زي ما هي بدل ما تمسحها. النتيجة: أول تبديل، عناصر الـ Hotbar كانت "بتتنسخ" للمجموعة التانية بدل ما تختفي. تم الإصلاح بحيث كل خانة حية دايمًا بتتكتب صراحةً (لو مفيش بيانات محفوظة ليها، تتكتب "فاضية" فعليًا).

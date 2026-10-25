@@ -10,30 +10,35 @@ license = "MIT"
   description = "Adds two independently-saved player inventories (A/B) that can be instantly swapped with a keybind."
   authors = "You"
 
-[[dependencies.dualinventory]]
-  modId = "minecraft"
-  mandatory = true
-  versionRange = "[1.20.1,1.21)"
-  ordering = "NONE"
-  side = "BOTH"
+    [[dependencies.dualinventory]]
+      modId = "minecraft"
+      mandatory = true
+      versionRange = "[1.20.1,1.21)"
+      ordering = "NONE"
+      side = "BOTH"
 
-[[dependencies.dualinventory]]
-  modId = "forge"
-  mandatory = true
-  versionRange = "[46,)"
-  ordering = "NONE"
-  side = "BOTH"
+    [[dependencies.dualinventory]]
+      modId = "forge"
+      mandatory = true
+      versionRange = "[46,)"
+      ordering = "NONE"
+      side = "BOTH"
 
-[[dependencies.dualinventory]]
-  modId = "travelersbackpack"
-  mandatory = false
-  versionRange = "[9.0.0,)"
-  ordering = "AFTER"
-  side = "BOTH"
+    # Optional soft dependency: enables swapping the worn Traveler's Backpack too, if present.
+    # The mod works perfectly fine without it (it just won't touch the backpack in that case).
+    [[dependencies.dualinventory]]
+      modId = "travelersbackpack"
+      mandatory = false
+      versionRange = "[9.0.0,)"
+      ordering = "AFTER"
+      side = "BOTH"
 
-[[dependencies.dualinventory]]
-  modId = "curios"
-  mandatory = false
-  versionRange = "[5.0.0,)"
-  ordering = "AFTER"
-  side = "BOTH"
+    # Optional soft dependency: enables swapping ALL Curios slots (rings, belts, any backpack
+    # worn via Curios instead of a vanilla armor slot, etc.) together with A/B. Works perfectly
+    # fine without it.
+    [[dependencies.dualinventory]]
+      modId = "curios"
+      mandatory = false
+      versionRange = "[5.0.0,)"
+      ordering = "AFTER"
+      side = "BOTH"
