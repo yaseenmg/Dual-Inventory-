@@ -1,64 +1,34 @@
 # Dual Inventory
 
-**Two independently saved player inventory sets for Minecraft Forge 1.20.1.** Switch between Inventory A and Inventory B with a configurable keybind.
-
-> This repository is being prepared as the source-code home for Dual Inventory. See the build notes below before compiling.
+Dual Inventory is a Minecraft Forge mod that lets each player keep two independently saved inventory and equipment sets, then switch between them with a keybind.
 
 ## Features
 
-- **Two inventory sets (A/B):** keep separate item and equipment loadouts.
-- **Instant switching:** send a swap request to the server using the client keybind.
-- **Per-player saved data:** inventory sets are stored through Forge capabilities.
-- **Optional integrations:** supports Traveler's Backpack and Curios when those mods are installed.
-- **Client HUD indicator:** shows which inventory set is active.
+- Two persistent inventory sets, A and B
+- Server-side inventory switching initiated by the client
+- Per-player data saved through Forge capabilities
+- Optional integrations with Traveler's Backpack and Curios
+- An on-screen indicator for the active inventory set
 
 ## Compatibility
 
-| Component | Target |
+| Component | Version |
 |---|---|
-| Minecraft | Java Edition 1.20.1 |
-| Mod loader | Minecraft Forge |
-| Java | Java 17 |
+| Minecraft: Java Edition | 1.20.1 |
+| Mod loader | Minecraft Forge 47.4.10 |
+| Java | 17 |
 | Mod ID | `dualinventory` |
-| Mod version | `1.0.0` |
-| License declared by the project | MIT |
+| Mod version | 1.0.0 |
 
-### Optional mod integrations
-
-- **Traveler's Backpack** — allows the worn backpack to participate in inventory switching.
-- **Curios API** — allows Curios equipment slots to participate in switching.
-
-Both integrations are optional. Dual Inventory is intended to run without either mod.
+Traveler's Backpack and Curios are optional. The mod is intended to work without either integration installed.
 
 ## Controls
 
-The current source registers **Z** as the inventory-switch key. Check Minecraft's **Options → Controls → Key Binds** to review or change the binding.
+The default inventory-switch key is **Z**. Review or change it under **Options → Controls → Key Binds**.
 
-## Project layout
+## Build
 
-```
-dualinv/
-├── build.gradle
-├── gradle.properties
-├── settings.gradle
-├── gradlew
-└── src/main/
-    ├── java/com/example/dualinventory/
-    │   ├── capability/   # Saved inventory data and swap service
-    │   ├── client/       # Keybind, client events, and HUD indicator
-    │   ├── compat/       # Optional mod integrations
-    │   ├── event/        # Player lifecycle events
-    │   └── network/      # Client-to-server swap packet
-    └── resources/
-        ├── META-INF/mods.toml
-        └── assets/dualinventory/lang/
-```
-
-## Build notes
-
-The Gradle project targets Forge 1.20.1 and Java 17. However, the source snapshot's own development notes warn that some code uses Minecraft SRG-mapped names and that a standard ForgeGradle build may not compile without adjustments. Treat a successful build as **not yet verified** until you build and test it in a clean environment.
-
-From the `dualinv` project directory, with a Java 17 JDK installed, try:
+Install a Java 17 JDK, then run these commands from the repository root:
 
 ```bash
 ./gradlew build
@@ -70,36 +40,18 @@ On Windows:
 gradlew.bat build
 ```
 
-If the build fails, retain the complete Gradle error output when reporting the issue. Do not assume the resulting JAR is tested merely because the Gradle task starts.
+The Gradle wrapper is included. A successful build does not by itself confirm the in-game behavior of inventory switching or optional integrations.
 
-## Testing checklist
+## Source layout
 
-- [ ] Build with Java 17 and Forge 1.20.1.
-- [ ] Test switching A ↔ B in single-player.
-- [ ] Verify items do not duplicate or disappear after repeated swaps.
-- [ ] Test death, respawn, and dimension changes.
-- [ ] Test on a dedicated server with a second player.
-- [ ] Test optional Traveler's Backpack and Curios integrations separately.
+- `src/main/java/com/example/dualinventory/` — mod, inventory capabilities, swap service, client controls, events, networking, and integrations
+- `src/main/resources/` — Forge metadata, access transformer, language text, and pack metadata
+- `gradle/` — Gradle wrapper configuration
 
-## Known testing note
+## Verification
 
-The development README documents a previous first-switch duplication bug and a Curios synchronization change that still needed final in-game confirmation. These behaviors should be explicitly retested before treating the mod as release-ready.
+The repository contains the source and build configuration. Test single-player and dedicated-server switching, death and respawn, dimension changes, repeated swaps, and optional mod integrations before treating a build as release-ready.
 
 ## License
 
-The mod metadata declares **MIT**. A complete repository should include a top-level `LICENSE` file with the full MIT license text and the correct copyright holder before redistribution.
-
-## Contributions and bug reports
-
-When reporting a bug, include:
-- Minecraft and Forge versions
-- Java version
-- Whether the issue occurs in single-player or multiplayer
-- Other inventory/equipment mods installed
-- The complete relevant log or crash report
-- Steps to reproduce the issue
-
-
-## Source tree status
-
-The Java sources, Forge metadata, Gradle build files, language resources, and project notes are in the `dualinv/` directory. The `gradlew` and `gradlew.bat` launchers are checked in, but `dualinv/gradle/wrapper/gradle-wrapper.jar` is still missing. See [`dualinv/SETUP_WRAPPER.md`](dualinv/SETUP_WRAPPER.md) for instructions to regenerate it locally. A GitHub Actions workflow also attempts a build using an installed Gradle 8.8; check the Actions tab for its result.
+The project is distributed under the MIT License. See [LICENSE](LICENSE).

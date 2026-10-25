@@ -3,10 +3,24 @@ name: Build mod
 on:
   push:
     paths:
+      - "src/**"
+      - "gradle/**"
+      - "build.gradle"
+      - "gradle.properties"
+      - "settings.gradle"
+      - "gradlew"
+      - "gradlew.bat"
       - "dualinv/**"
       - ".github/workflows/build.yml"
   pull_request:
     paths:
+      - "src/**"
+      - "gradle/**"
+      - "build.gradle"
+      - "gradle.properties"
+      - "settings.gradle"
+      - "gradlew"
+      - "gradlew.bat"
       - "dualinv/**"
       - ".github/workflows/build.yml"
   workflow_dispatch:
@@ -33,7 +47,6 @@ jobs:
         with:
           gradle-version: "8.8"
       - name: Generate missing Gradle Wrapper and commit it
-        working-directory: dualinv
         env:
           GH_TOKEN: ${{ github.token }}
           EVENT_NAME: ${{ github.event_name }}
@@ -49,18 +62,16 @@ jobs:
             fi
           fi
       - name: Build Forge mod
-        working-directory: dualinv
         run: ./gradlew build --no-daemon
       - name: Package source archive
         run: |
-          zip -r dualinventory-source.zip dualinv \
-            -x "dualinv/.gradle/*" "dualinv/build/*" "dualinv/.git/*"
+          zip -r dualinventory-source.zip README.md LICENSE .gitignore SETUP_WRAPPER.md SOURCE_STATUS.md build.gradle gradle.properties settings.gradle gradlew gradlew.bat gradle src
       - name: Upload mod JAR and source archive
         uses: actions/upload-artifact@v4
         with:
           name: Dual-Inventory-Forge-1.20.1
           path: |
-            dualinv/build/libs/*.jar
+            build/libs/*.jar
             dualinventory-source.zip
           if-no-files-found: error
           retention-days: 90
